@@ -1,6 +1,10 @@
 name: setting up environment
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
+    paths-ignore: 'README.md'
+  workflow_dispatch:
     
 env:
   GitHubMail: "manofuranium@gmail.com"
