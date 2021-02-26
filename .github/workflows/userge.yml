@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
     
 env:
-  GitHubMail: "manofuranium@gmail.com"
-  GitHubName: "ElytrA8" 
+  GitHubMail: "error@notavailable.live"
+  GitHubName: "ProgrammingError" 
 jobs:
   build:
     runs-on: ubuntu-18.04
@@ -27,12 +27,12 @@ jobs:
        - name: cloning repo
          continue-on-error: true
          run: |
-           git clone https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} userge
+           git clone https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} ljbot
        - name: Running Userge
          timeout-minutes: 350
          continue-on-error: true
          run: |
-           cd userge
+           cd ljbot
            docker-compose up -d
            docker-compose logs -f
        - name: Loop workflow
