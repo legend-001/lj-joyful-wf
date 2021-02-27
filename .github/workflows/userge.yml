@@ -27,7 +27,7 @@ jobs:
        - name: cloning repo
          continue-on-error: true
          run: |
-           git clone https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} ljbot
+           git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} ljbot
        - name: Running Userge
          timeout-minutes: 350
          continue-on-error: true
