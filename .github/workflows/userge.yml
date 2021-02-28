@@ -7,8 +7,8 @@ on:
   workflow_dispatch:
     
 env:
-  GitHubMail: "error@notavailable.live"
-  GitHubName: "ProgrammingError" 
+  GitHubMail: "aq0500182@gmail.com"
+  GitHubName: "no1-coder" 
 jobs:
   build:
     runs-on: ubuntu-18.04
