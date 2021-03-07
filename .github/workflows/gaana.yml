@@ -28,7 +28,7 @@ jobs:
          continue-on-error: true
          run: |
            git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} ljbot
-       - name: Running Userge
+       - name: Running Gaana
          timeout-minutes: 350
          continue-on-error: true
          run: |
