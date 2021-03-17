@@ -11,7 +11,7 @@ env:
   GitHubName: "no1-coder" 
 jobs:
   build:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
 
     steps:
        - name: Checkout
@@ -19,6 +19,7 @@ jobs:
 
        - name: Set Git Configs & Secrets
          run: |
+           sudo apt-get install -y git
            git config --global user.email ${GitHubMail}
            git config --global user.name ${GitHubName}
            git config --global credential.helper store
@@ -27,14 +28,14 @@ jobs:
        - name: cloning repo
          continue-on-error: true
          run: |
-           git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} ljbot
+           git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} vcbot
+           docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t vcbot
        - name: Running VC Bot
          timeout-minutes: 350
          continue-on-error: true
          run: |
-           cd ljbot
-           docker-compose up -d
-           docker-compose logs -f
+           cd vcbot
+           docker run --privileged --rm -i --env-file .env vcbot
        - name: Loop workflow
          continue-on-error: true
          run: |
