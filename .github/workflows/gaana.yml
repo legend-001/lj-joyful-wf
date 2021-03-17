@@ -1,47 +1,47 @@
-name: Running VCMusic Bot
-
 on:
   push:
     branches: [ main ]
     paths-ignore: 'README.md'
   workflow_dispatch:
-    
+   
 env:
   GitHubMail: "aq0500182@gmail.com"
-  GitHubName: "no1-coder" 
+  GitHubName: "no1-coder"
+
 jobs:
-  build:
+  debug:
     runs-on: ubuntu-20.04
 
     steps:
-       - name: Checkout
-         uses: actions/checkout@main
+      - name: Checkout
+        uses: actions/checkout@main
 
-       - name: Set Git Configs & Secrets
-         run: |
-           sudo apt-get install -y git
-           git config --global user.email ${GitHubMail}
-           git config --global user.name ${GitHubName}
-           git config --global credential.helper store
-           echo "https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
-
-       - name: cloning repo
-         continue-on-error: true
-         run: |
-           git clone https://${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} vcbot
-           docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t vcbot
-       - name: Running VC Bot
-         timeout-minutes: 350
-         continue-on-error: true
-         run: |
-           cd vcbot
-           docker run --privileged --rm -i --env-file .env vcbot
-       - name: Loop workflow
-         continue-on-error: true
-         run: |
-           git clone https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} loop
-           cd loop || exit 1
-           echo $(( RANDOM - ( RANDOM % RANDOM ) )) > looper.txt
-           git add looper.txt
-           git commit -m "Workflow : Loop at $(date -u +%D-%T%P)"
-           git push -q https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} HEAD:main
+      - name: Set Git Configs & Secrets
+        run: |
+          sudo apt-get install -y git
+          git config --global user.email ${GitHubMail}
+          git config --global user.name ${GitHubName}
+          git config --global credential.helper store
+          echo "https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com" > ~/.git-credentials
+      - name: Clone The Secret Mirror Repository
+        continue-on-error: true
+        run: |
+          git clone https://${GitHubName}:${{ secrets.GH_TOKEN }}@github.com/${{ secrets.CREDS }} source
+          cd source
+          docker build . --rm --force-rm --compress --no-cache=true --pull --file Dockerfile -t vcbot 
+      - name: running VC bot
+        timeout-minutes: 338
+        continue-on-error: true
+        run: |
+          cd source
+          docker run --privileged --rm -i --env-file .env vcbot
+      - name: Loop Workflow
+        continue-on-error: true
+        run: |
+          # ${GITHUB_REPOSITORY} is the repo slug which runs this script
+          git clone https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} loop
+          cd loop || exit 1
+          echo $(( RANDOM - ( RANDOM % RANDOM ) )) > looper.txt
+          git add looper.txt
+          git commit -m "Workflow : Loop at $(date -u +%D-%T%P)"
+          git push -q https://${{ secrets.GH_TOKEN }}@github.com/${GITHUB_REPOSITORY} HEAD:main
